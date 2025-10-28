@@ -4,19 +4,8 @@ import java.sql.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-/**
- * User 테이블에 대한 데이터베이스 작업을 처리하는 클래스
- * DAO = Data Access Object (데이터 접근 객체)
- */
 public class UserDAO {
     
-    /**
-     * 회원가입 - 새로운 사용자를 DB에 저장
-     * @param username 사용자 이름
-     * @param password 비밀번호 (평문)
-     * @param email 이메일
-     * @return 성공 시 true, 실패 시 false
-     */
     public boolean registerUser(String username, String password, String email) {
         // SQL 쿼리문 준비 (? 는 나중에 값을 넣을 자리)
         String sql = "INSERT INTO users (username, password_hash, email) VALUES (?, ?, ?)";
@@ -66,12 +55,7 @@ public class UserDAO {
         
         return false;
     }
-    
-    /**
-     * 사용자 이름 중복 확인
-     * @param username 확인할 사용자 이름
-     * @return 중복이면 true, 사용 가능하면 false
-     */
+
     public boolean isUsernameTaken(String username) {
         String sql = "SELECT COUNT(*) FROM users WHERE username = ?";
         
@@ -101,11 +85,6 @@ public class UserDAO {
         return false;
     }
     
-    /**
-     * 비밀번호를 SHA-256으로 암호화
-     * @param password 평문 비밀번호
-     * @return 암호화된 비밀번호
-     */
     private String hashPassword(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -126,13 +105,10 @@ public class UserDAO {
         } catch (NoSuchAlgorithmException e) {
             System.out.println("암호화 알고리즘을 찾을 수 없습니다.");
             e.printStackTrace();
-            return password; // 에러 시 평문 반환 (실제로는 이렇게 하면 안 됨)
+            return password;
         }
     }
     
-    /**
-     * DB 자원 정리 메서드
-     */
     private void closeResources(Connection conn, PreparedStatement pstmt, ResultSet rs) {
         try {
             if (rs != null) rs.close();

@@ -2,10 +2,6 @@ package EmotionDiary;
 
 import java.util.Scanner;
 
-/**
- * 회원가입 기능을 테스트하는 메인 클래스
- * 나중에 GUI나 웹 페이지로 바꿀 수 있어요!
- */
 public class SignUpTest {
     
     public static void main(String[] args) {
@@ -22,14 +18,14 @@ public class SignUpTest {
         
         // 사용자 이름 유효성 검사
         if (username.isEmpty() || username.length() < 3) {
-            System.out.println("❌ 사용자 이름은 3글자 이상이어야 합니다!");
+            System.out.println("사용자 이름은 3글자 이상이어야 합니다!");
             scanner.close();
             return;
         }
         
         // 중복 확인
         if (userDAO.isUsernameTaken(username)) {
-            System.out.println("❌ 이미 사용 중인 사용자 이름입니다!");
+            System.out.println("이미 사용 중인 사용자 이름입니다!");
             scanner.close();
             return;
         }
@@ -39,7 +35,7 @@ public class SignUpTest {
         
         // 비밀번호 유효성 검사
         if (password.length() < 4) {
-            System.out.println("❌ 비밀번호는 4글자 이상이어야 합니다!");
+            System.out.println("비밀번호는 4글자 이상이어야 합니다!");
             scanner.close();
             return;
         }
@@ -57,10 +53,10 @@ public class SignUpTest {
         boolean success = userDAO.registerUser(username, password, email);
         
         if (success) {
-            System.out.println("\n✅ 회원가입이 완료되었습니다!");
-            System.out.println("환영합니다, " + username + "님! 😊");
+            System.out.println("\n회원가입이 완료되었습니다!");
+            System.out.println("환영합니다, " + username + "님!");
         } else {
-            System.out.println("\n❌ 회원가입에 실패했습니다.");
+            System.out.println("\n회원가입에 실패했습니다.");
         }
         
         scanner.close();
