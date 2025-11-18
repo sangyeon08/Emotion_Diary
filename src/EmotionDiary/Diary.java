@@ -1,9 +1,7 @@
 package EmotionDiary;
 
-/**
- * 일기 정보를 담는 클래스
- * DB의 diaries 테이블과 매핑됩니다
- */
+/* 일기 정보를 담는 클래스 */
+
 public class Diary {
     private Long diaryId;
     private Long userId;

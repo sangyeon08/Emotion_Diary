@@ -1,9 +1,7 @@
 package EmotionDiary;
 
-/**
- * 사용자 정보를 담는 클래스
- * DB의 users 테이블과 매핑됩니다
- */
+/* 사용자 정보를 담는 클래스*/
+
 public class User {
     private Long id;
     private String username;
