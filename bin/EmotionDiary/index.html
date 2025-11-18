@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>감정일기 - Emotion Diary</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 450px;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #f5f7ff;
+        }
+
+        .link-text {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .link-text a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .link-text a:hover {
+            text-decoration: underline;
+        }
+
+        .emotion-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .emotion-btn {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        .emotion-btn:hover {
+            border-color: #667eea;
+            transform: scale(1.05);
+        }
+
+        .emotion-btn.selected {
+            border-color: #667eea;
+            background: #f5f7ff;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .emotion-label {
+            display: block;
+            font-size: 11px;
+            margin-top: 5px;
+            color: #666;
+        }
+
+        .diary-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .diary-item {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+
+        .diary-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .diary-date {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 5px;
+        }
+
+        .diary-emotion {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .diary-content {
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .welcome-box {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .welcome-box h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .menu-btn {
+            padding: 30px 20px;
+            border: none;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .menu-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .menu-icon {
+            font-size: 40px;
+            display: block;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✨ 감정일기</h1>
+            <p>오늘의 감정을 기록하세요</p>
+        </div>
+
+        <div class="content">
+            <!-- 로그인 페이지 -->
+            <div id="loginPage" class="page active">
+                <h2 style="margin-bottom: 25px; color: #333;">로그인</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginUsername">사용자 이름</label>
+                        <input type="text" id="loginUsername" placeholder="사용자 이름을 입력하세요" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">비밀번호</label>
+                        <input type="password" id="loginPassword" placeholder="비밀번호를 입력하세요" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">로그인</button>
+                </form>
+                <div class="link-text">
+                    계정이 없으신가요? <a href="#" onclick="showPage('signupPage')">회원가입</a>
+                </div>
+            </div>
+
+            <!-- 회원가입 페이지 -->
+            <div id="signupPage" class="page">
+                <h2 style="margin-bottom: 25px; color: #333;">회원가입</h2>
+                <form id="signupForm">
+                    <div class="form-group">
+                        <label for="signupUsername">사용자 이름 (3자 이상)</label>
+                        <input type="text" id="signupUsername" placeholder="사용자 이름" required minlength="3">
+                    </div>
+                    <div class="form-group">
+                        <label for="signupPassword">비밀번호 (4자 이상)</label>
+                        <input type="password" id="signupPassword" placeholder="비밀번호" required minlength="4">
+                    </div>
+                    <div class="form-group">
+                        <label for="signupEmail">이메일 (선택사항)</label>
+                        <input type="email" id="signupEmail" placeholder="example@email.com">
+                    </div>
+                    <button type="submit" class="btn btn-primary">회원가입</button>
+                    <button type="button" class="btn btn-secondary" onclick="showPage('loginPage')">취소</button>
+                </form>
+            </div>
+
+            <!-- 메인 메뉴 페이지 -->
+            <div id="mainPage" class="page">
+                <div class="welcome-box">
+                    <h2>환영합니다! 👋</h2>
+                    <p id="welcomeText" style="color: #666;"></p>
+                </div>
+                <div class="menu-grid">
+                    <button class="menu-btn" onclick="showPage('writePage')">
+                        <span class="menu-icon">✍️</span>
+                        일기 쓰기
+                    </button>
+                    <button class="menu-btn" onclick="showPage('listPage')">
+                        <span class="menu-icon">📖</span>
+                        일기 보기
+                    </button>
+                </div>
+                <button class="btn btn-secondary" onclick="logout()" style="margin-top: 20px;">로그아웃</button>
+            </div>
+
+            <!-- 일기 작성 페이지 -->
+            <div id="writePage" class="page">
+                <h2 style="margin-bottom: 25px; color: #333;">오늘의 일기</h2>
+                <form id="diaryForm">
+                    <div class="form-group">
+                        <label>오늘의 감정</label>
+                        <div class="emotion-selector">
+                            <button type="button" class="emotion-btn" data-emotion="happy">
+                                😊<span class="emotion-label">기쁨</span>
+                            </button>
+                            <button type="button" class="emotion-btn" data-emotion="sad">
+                                😢<span class="emotion-label">슬픔</span>
+                            </button>
+                            <button type="button" class="emotion-btn" data-emotion="angry">
+                                😠<span class="emotion-label">화남</span>
+                            </button>
+                            <button type="button" class="emotion-btn" data-emotion="anxious">
+                                😰<span class="emotion-label">불안</span>
+                            </button>
+                            <button type="button" class="emotion-btn" data-emotion="excited">
+                                🤩<span class="emotion-label">신남</span>
+                            </button>
+                            <button type="button" class="emotion-btn" data-emotion="calm">
+                                😌<span class="emotion-label">평온</span>
+                            </button>
+                        </div>
+                        <input type="hidden" id="selectedEmotion" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="diaryContent">오늘 하루는 어땠나요?</label>
+                        <textarea id="diaryContent" placeholder="오늘의 일과 감정을 자유롭게 기록해보세요..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">저장하기</button>
+                    <button type="button" class="btn btn-secondary" onclick="showPage('mainPage')">취소</button>
+                </form>
+            </div>
+
+            <!-- 일기 목록 페이지 -->
+            <div id="listPage" class="page">
+                <h2 style="margin-bottom: 25px; color: #333;">내 일기 목록</h2>
+                <div class="diary-list" id="diaryList">
+                    <!-- 일기 목록이 여기에 표시됩니다 -->
+                </div>
+                <button class="btn btn-secondary" onclick="showPage('mainPage')">돌아가기</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let diaries = [];
+
+        // 페이지 전환
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+
+            if (pageId === 'listPage') {
+                loadDiaries();
+            }
+        }
+
+        // 회원가입
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('signupUsername').value;
+            const password = document.getElementById('signupPassword').value;
+            const email = document.getElementById('signupEmail').value;
+
+            // 실제로는 서버로 전송해야 합니다
+            alert(`회원가입 완료!\n사용자: ${username}`);
+            showPage('loginPage');
+        });
+
+        // 로그인
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            
+            // 실제로는 서버에서 인증해야 합니다
+            currentUser = username;
+            document.getElementById('welcomeText').textContent = `${username}님`;
+            showPage('mainPage');
+        });
+
+        // 감정 선택
+        document.querySelectorAll('.emotion-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.emotion-btn').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+                document.getElementById('selectedEmotion').value = this.dataset.emotion;
+            });
+        });
+
+        // 일기 작성
+        document.getElementById('diaryForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const emotion = document.getElementById('selectedEmotion').value;
+            const content = document.getElementById('diaryContent').value;
+
+            if (!emotion) {
+                alert('감정을 선택해주세요!');
+                return;
+            }
+
+            const diary = {
+                date: new Date().toLocaleDateString('ko-KR'),
+                emotion: document.querySelector(`.emotion-btn[data-emotion="${emotion}"]`).textContent.split('\n')[0],
+                content: content
+            };
+
+            diaries.unshift(diary);
+            
+            alert('일기가 저장되었습니다!');
+            document.getElementById('diaryForm').reset();
+            document.querySelectorAll('.emotion-btn').forEach(b => b.classList.remove('selected'));
+            showPage('mainPage');
+        });
+
+        // 일기 목록 불러오기
+        function loadDiaries() {
+            const listDiv = document.getElementById('diaryList');
+            
+            if (diaries.length === 0) {
+                listDiv.innerHTML = '<p style="text-align: center; color: #999; padding: 40px;">작성된 일기가 없습니다.</p>';
+                return;
+            }
+
+            listDiv.innerHTML = diaries.map(diary => `
+                <div class="diary-item">
+                    <div class="diary-date">${diary.date}</div>
+                    <div class="diary-emotion">${diary.emotion}</div>
+                    <div class="diary-content">${diary.content}</div>
+                </div>
+            `).join('');
+        }
+
+        // 로그아웃
+        function logout() {
+            currentUser = null;
+            diaries = [];
+            document.getElementById('loginForm').reset();
+            showPage('loginPage');
+        }
+    </script>
+</body>
+</html>
