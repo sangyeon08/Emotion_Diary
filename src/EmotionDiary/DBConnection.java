@@ -5,9 +5,9 @@ import java.sql.SQLException;
 
 public class DBConnection {
 
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/your_schema_name?serverTimezone=UTC";
-    private static final String DB_USER = "your_username";
-    private static final String DB_PASSWORD = "your_password";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/EmotionDiary?serverTimezone=UTC";
+    private static final String DB_USER = "Sangyeon08";
+    private static final String DB_PASSWORD = "1013";
     private static final String DRIVER_CLASS = "com.mysql.cj.jdbc.Driver";
 
     public static Connection getConnection() {
